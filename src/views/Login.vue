@@ -1,24 +1,41 @@
 <template>
-  <form class="card auth-card">
+  <form class="card auth-card" @submit.prevent="onSubmit">
     <div class="card-content">
       <span class="card-title">Home bookkeeping</span>
       <div class="input-field">
         <input
             id="email"
             type="text"
-            class="validate"
+            v-model.trim="email"
+            :class="{invalid: ($v.email.$dirty && !$v.email.required) || ($v.email.$dirty && !$v.email.email)}"
         >
         <label for="email">Email</label>
-        <small class="helper-text invalid">Email</small>
+        <small
+            class="helper-text invalid"
+            v-if="($v.email.$dirty && !$v.email.required)"
+        >Empty</small>
+        <small
+            class="helper-text invalid"
+            v-else-if="($v.email.$dirty && !$v.email.email)"
+        >Not correct email</small>
       </div>
       <div class="input-field">
         <input
             id="password"
             type="password"
             class="validate"
+            v-model.trim="password"
+            :class="{invalid: ($v.password.$dirty && !$v.password.required) || ($v.password.$dirty && !$v.password.minLength)}"
         >
         <label for="password">Password</label>
-        <small class="helper-text invalid">Password</small>
+        <small
+            class="helper-text invalid"
+            v-if="$v.password.$dirty && !$v.password.required"
+        >Enter password</small>
+        <small
+            class="helper-text invalid"
+            v-else-if="$v.password.$dirty && !$v.password.minLength"
+        >Password too short</small>
       </div>
     </div>
     <div class="card-action">
@@ -34,8 +51,44 @@
 
       <p class="center">
         Don't have an account?
-        <a href="/">Register</a>
+        <router-link to="/register">Register</router-link>
       </p>
     </div>
   </form>
 </template>
+
+<script>
+import {email, required, minLength} from 'vuelidate/lib/validators'
+import messages from '@/utils/messages'
+
+export default {
+  name: 'login',
+  data: () => ({
+    email: '',
+    password: ''
+  }),
+  validations: {
+    email: {email, required},
+    password: {required, minLength: minLength(7)}
+  },
+  mounted(){
+    if(messages[this.$route.query.message]) {
+      this.$message(messages[this.$route.query.message])
+    }
+  },
+  methods: {
+    onSubmit() {
+      if(this.$v.$invalid){
+        this.$v.$touch()
+        return
+      }
+      const formData = {
+        email: this.email,
+        password: this.password
+      }
+      console.log(formData)
+      this.$router.push('/')
+    }
+  }
+}
+</script>
