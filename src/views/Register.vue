@@ -84,18 +84,18 @@ export default {
   data: () => ({
     email: '',
     password: '',
-    name:'',
+    name: '',
     agree: false
   }),
   validations: {
     email: {email, required},
     password: {required, minLength: minLength(7)},
     name: {required},
-    agree:{checked: value => value}
+    agree: {checked: value => value}
   },
   methods: {
-    onSubmit() {
-      if(this.$v.$invalid){
+    async onSubmit() {
+      if (this.$v.$invalid) {
         this.$v.$touch()
         return
       }
@@ -105,8 +105,12 @@ export default {
         name: this.name,
         agree: this.agree
       }
-      console.log(formData)
-      this.$router.push('/')
+      try {
+        await this.$store.dispatch('register', formData)
+        this.$router.push('/')
+      } catch (e) {
+        console.log('123', e)
+      }
     }
   }
 }
