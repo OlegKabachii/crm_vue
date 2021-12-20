@@ -28,9 +28,9 @@ import HomeCurrency from '@/components/HomeCurrency'
 
 export default {
   name: 'home',
-  date: () => ({
-    loading: true,
-    currency: null
+  data: () => ({
+    currency: null,
+    loading: true
   }),
   async mounted() {
     this.currency = await this.$store.dispatch('fetchCurrency')
