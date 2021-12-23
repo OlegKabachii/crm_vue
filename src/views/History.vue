@@ -8,36 +8,57 @@
       <canvas></canvas>
     </div>
 
-    <section>
-      <table>
-        <thead>
-        <tr>
-          <th>#</th>
-          <th>Sum</th>
-          <th>Date</th>
-          <th>Category</th>
-          <th>Type</th>
-          <th>Open</th>
-        </tr>
-        </thead>
+    <Loader v-if="loading"/>
 
-        <tbody>
-        <tr>
-          <td>1</td>
-          <td>1212</td>
-          <td>12.12.32</td>
-          <td>name</td>
-          <td>
-            <span class="white-text badge red">Rate</span>
-          </td>
-          <td>
-            <button class="btn-small btn">
-              <i class="material-icons">open_in_new</i>
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+    <p
+        class="center"
+        v-else-if="!records.length">No Records!
+    </p>
+
+    <section v-else>
+      <HistoryTable :records="items"/>
+
+      <Paginate
+          v-model="page"
+          :page-count="pageCount"
+          :click-handler="pageChangeHandler"
+          :prev-text="'Prev'"
+          :next-text="'Next'"
+          :container-class="'pagination'"
+          :page-class="'waves-effect'"
+      />
     </section>
   </div>
 </template>
+
+<script>
+import HistoryTable from "@/components/HistoryTable";
+import paginationMixin from "@/mixins/pagination.mixin";
+
+export default {
+  name: 'history',
+  mixins: [paginationMixin],
+  data: () => ({
+    loading: true,
+    records: []
+  }),
+  async mounted() {
+    this.records = await this.$store.dispatch('fetchRecords')
+    const categories = await this.$store.dispatch('fetchCategories')
+
+    this.setupPagination(this.records.map(record => {
+      return {
+        ...record,
+        categoryName: categories.find(c => c.id === record.categoryId).title,
+        typeClass: record.type === 'income' ? 'green' : 'red',
+        typeText: record.type === 'income' ? 'Income' : 'Outcome'
+      }
+    }))
+
+    this.loading = false
+  },
+   components: {
+    HistoryTable
+  }
+}
+</script>
