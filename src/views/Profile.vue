@@ -19,7 +19,7 @@
         <small
             class="helper-text invalid"
             v-if="($v.name.$dirty && !$v.name.required)"
-        >{{ 'Message_EnterName' | localize}}</small>
+        >{{ 'Message_EnterName' | localize }}</small>
         <span
             class="helper-text invalid">name</span>
       </div>
@@ -35,7 +35,7 @@
       </div>
 
       <button class="btn waves-effect waves-light" type="submit">
-        {{ 'Update' | localize}}
+        {{ 'Update' | localize }}
         <i class="material-icons right">send</i>
       </button>
     </form>
@@ -49,11 +49,16 @@
 </style>
 
 <script>
-import {mapGetters, mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import M from 'materialize-css'
 import {required} from "vuelidate/lib/validators";
 
 export default {
+  metaInfo() {
+    return {
+      title: this.$title('ProfileTitle')
+    }
+  },
   data: () => ({
     name: '',
     isEnLocale: true
