@@ -71,14 +71,14 @@ export default {
     email: {email, required},
     password: {required, minLength: minLength(7)}
   },
-  mounted(){
-    if(messages[this.$route.query.message]) {
+  mounted() {
+    if (messages[this.$route.query.message]) {
       this.$message(messages[this.$route.query.message])
     }
   },
   methods: {
-   async onSubmit() {
-      if(this.$v.$invalid){
+    async onSubmit() {
+      if (this.$v.$invalid) {
         this.$v.$touch()
         return
       }
@@ -86,13 +86,12 @@ export default {
         email: this.email,
         password: this.password
       }
-      try{
+      try {
         await this.$store.dispatch('login', formData)
         await this.$router.push('/')
-      }catch(e){
+      } catch (e) {
         console.log(e)
       }
-
     }
   }
 }

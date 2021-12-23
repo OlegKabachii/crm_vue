@@ -13,6 +13,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/database';
 import currencyFilter from "@/filters/currency.filter";
+import localizeFilter from "@/filters/localize.filter";
 import tooltipDirective from "@/directives/tooltip.directive";
 
 
@@ -22,6 +23,7 @@ Vue.use(messagePlugin)
 Vue.use(Vuelidate)
 Vue.filter('date', dateFilter)
 Vue.filter('currency', currencyFilter)
+Vue.filter('localize', localizeFilter)
 Vue.directive('tooltip', tooltipDirective)
 Vue.component('Loader', Loader)
 Vue.component('paginate', Paginate)
